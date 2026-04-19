@@ -11,7 +11,7 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
     useEffect(() => {
         const activeChatObj = chats.find((chat) => chat.id === activeChat)
         setMessages(activeChatObj ? activeChatObj.messages : [])
-    }, { activeChat, chats })
+    }, [activeChat, chats])
 
     // handler input change in the chat input field and updates the inputValue state with the current value of the input field
     const handleInputChange = (e) => {
@@ -20,7 +20,7 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
 
     // handles submit message 
     const sendMessage = () => {
-        if (inputValue.trim === '') return; // prevents submitting empty messages
+        if (inputValue.trim() === '') return; // prevents submitting empty messages
         const newMessage = {
             type: "prompt",
             text: inputValue,
@@ -52,7 +52,17 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
         setActiveChat(id)
     )
 
+    const handleDeleteChat = (id) => {
+        const updatedChats = chats.filter((chat) => chat.id !== id)
+        setChats(updatedChats)
 
+        if (id === activeChat) {
+            const newActiveChat = updatedChats.length > 0 ?
+                updatedChats[0].id
+                : null
+            setActiveChat(newActiveChat)
+        }
+    }
 
     return (
         <div className='chat-app'>
@@ -71,7 +81,12 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
                     onClick={() => handleSelectChat(chat.id)}
                 >
                     <h4>{chat.displayId}</h4>
-                    <i className="bx bx-x-circle"></i>
+                    <i className="bx bx-x-circle"
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            handleDeleteChat(chat.id)
+                        }}
+                    ></i>
                 </div>)
                 )}
             </div>
