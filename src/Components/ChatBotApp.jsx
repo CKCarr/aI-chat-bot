@@ -27,18 +27,23 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
             timestamp: new Date().toLocaleTimeString("en-US"),
         }
 
-        const updatedMessages = [...messages, newMessage];
-        setMessages(updatedMessages);
-        setInputValue(''); // resets input field
+        if (!activeChat) {
+            onNewChat(inputValue)
+            setInputValue('')
+        } else {
+            const updatedMessages = [...messages, newMessage];
+            setMessages(updatedMessages);
+            setInputValue(''); // resets input field
 
-        // handle chat history when user submits a new message
-        const updatedChats = chats.map((chat) => {
-            if (chat.id === activeChat) {
-                return { ...chat, messages: updatedMessages };
-            }
-            return chat;
-        });
-        setChats(updatedChats);
+            // handle chat history when user submits a new message
+            const updatedChats = chats.map((chat) => {
+                if (chat.id === activeChat) {
+                    return { ...chat, messages: updatedMessages };
+                }
+                return chat;
+            });
+            setChats(updatedChats);
+        }
     }
 
     const handleKeyDown = (e) => {
@@ -70,7 +75,7 @@ const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNe
                 <div className="chat-list-header">
                     <h2>Chat List</h2>
                     <i className='bx bx-edit-alt new-chat'
-                        onClick={onNewChat}></i>
+                        onClick={() => onNewChat()}></i>
                 </div>
                 {/* This will be mapped with the chat history */}
                 {chats.map((chat) =>
