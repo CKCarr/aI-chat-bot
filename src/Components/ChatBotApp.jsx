@@ -1,12 +1,17 @@
-import React, { useState } from 'react'
+import React, { act, useEffect, useState } from 'react'
 import './ChatBotApp.css'
 
-const ChatBotApp = ({ onGoBack, chats, setChats }) => {
+const ChatBotApp = ({ onGoBack, chats, setChats, activeChat, setActiveChat, onNewChat }) => {
     // state  for chat input field 
     const [inputValue, setInputValue] = useState('');
 
     // state for chat messages
     const [messages, setMessages] = useState(chats[0]?.messages || []);
+
+    useEffect(() => {
+        const activeChatObj = chats.find((chat) => chat.id === activeChat)
+        setMessages(activeChatObj ? activeChatObj.messages : [])
+    }, { activeChat, chats })
 
     // handler input change in the chat input field and updates the inputValue state with the current value of the input field
     const handleInputChange = (e) => {
@@ -26,21 +31,26 @@ const ChatBotApp = ({ onGoBack, chats, setChats }) => {
         setMessages(updatedMessages);
         setInputValue(''); // resets input field
 
-        // handle chat history when user submits a new message, updates the messages array of the first chat in the chat history with the updated messages array
-        const updatedChats = chats.map((chat, index) => {
-            if (index === 0) {
-                return { ...chats, messages: updatedMessages };
+        // handle chat history when user submits a new message
+        const updatedChats = chats.map((chat) => {
+            if (chat.id === activeChat) {
+                return { ...chat, messages: updatedMessages };
             }
             return chat;
         });
         setChats(updatedChats);
     }
+
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
             e.preventDefault()
             sendMessage()
         }
     }
+
+    const handleSelectChat = (id) => (
+        setActiveChat(id)
+    )
 
 
 
@@ -49,12 +59,18 @@ const ChatBotApp = ({ onGoBack, chats, setChats }) => {
             <div className="chat-list">
                 <div className="chat-list-header">
                     <h2>Chat List</h2>
-                    <i className='bx bx-edit-alt new-chat'></i>
+                    <i className='bx bx-edit-alt new-chat'
+                        onClick={onNewChat}></i>
                 </div>
                 {/* This will be mapped with the chat history */}
-                {chats.map((chat, index) =>
-                (<div key={index} className={`chat-list-item ${index === 0 ? 'active' : ''}`}>
-                    <h4>{chat.id}</h4>
+                {chats.map((chat) =>
+                (<div
+                    key={chat.id}
+                    className={`chat-list-item 
+                    ${chat.id === activeChat ? 'active' : ''}`}
+                    onClick={() => handleSelectChat(chat.id)}
+                >
+                    <h4>{chat.displayId}</h4>
                     <i className="bx bx-x-circle"></i>
                 </div>)
                 )}
@@ -67,7 +83,9 @@ const ChatBotApp = ({ onGoBack, chats, setChats }) => {
                 </div>
                 <div className="chat">
                     {messages.map((msg, index) => (
-                        <div key={index} className={msg.type === "prompt" ? "prompt" : "response"}>
+                        <div
+                            key={index}
+                            className={msg.type === "prompt" ? "prompt" : "response"}>
                             {msg.text}
                             <span>{msg.timestamp}</span>
                         </div>
