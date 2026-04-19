@@ -4,6 +4,7 @@ import ChatBotApp from './Components/ChatBotApp'
 
 const App = () => {
   const [isChatting, setIsChatting] = useState(false)
+  // stores list of chat sessions
   const [chats, setChats] = useState([])
 
   // handler sets state of isChatting to true when user clicks start button on landing page
@@ -29,7 +30,11 @@ const App = () => {
   return (
     <div className='container'>
       {/* Logic conditional state of Chat renders UI of selected state */}
-      {isChatting ? <ChatBotApp onGoBack={handleEndChat} chats={chats} setChats={setChats} /> : <ChatBotStart onStartChat={handleStartChat} />}
+      {isChatting ? (
+        <ChatBotApp onGoBack={handleEndChat} chats={chats} setChats={setChats} />
+      ) : (
+        <ChatBotStart onStartChat={handleStartChat} />
+      )}
     </div>
   )
 };

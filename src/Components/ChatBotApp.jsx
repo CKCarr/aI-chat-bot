@@ -35,6 +35,14 @@ const ChatBotApp = ({ onGoBack, chats, setChats }) => {
         });
         setChats(updatedChats);
     }
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault()
+            sendMessage()
+        }
+    }
+
+
 
     return (
         <div className='chat-app'>
@@ -58,17 +66,29 @@ const ChatBotApp = ({ onGoBack, chats, setChats }) => {
                     <i className="bx bx-arrow-back arrow" onClick={onGoBack}></i>
                 </div>
                 <div className="chat">
-
-                    <div className="prompt">Hi, I am a prompt. How are you?
-                        <span>TIME 00:00:00 PM</span>
-                    </div>
-
+                    {messages.map((msg, index) => (
+                        <div key={index} className={msg.type === "prompt" ? "prompt" : "response"}>
+                            {msg.text}
+                            <span>{msg.timestamp}</span>
+                        </div>
+                    ))}
                     <div className="typing">Typing...</div>
                 </div>
-                <form action="" className="msg-form">
+                <form
+                    className="msg-form"
+                    onSubmit={(e) => e.preventDefault()}
+                >
                     <i className="fa-solid fa-face-smile emoji"></i>
-                    <input type="text" className="msg-input" placeholder='Type a message...' />
-                    <i className="fa-solid fa-paper-plane"></i>
+                    <input
+                        type="text"
+                        className="msg-input"
+                        placeholder='Type a message...'
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <i className="fa-solid fa-paper-plane"
+                        onClick={sendMessage}></i>
                 </form>
             </div>
         </div>
