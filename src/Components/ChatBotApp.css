@@ -67,7 +67,7 @@
 }
 
 .chat-window {
-  width: 70%;
+  width: 80%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -107,6 +107,11 @@
   row-gap: 4rem;
   overflow-y: auto;
 }
+.chat span {
+  font-size: 1.2rem;
+  color: #f9ffab;
+  padding-top: 1rem;
+}
 
 .chat::-webkit-scrollbar {
   display: none;
@@ -114,11 +119,12 @@
 
 .prompt,
 .response {
-  max-width: 80%;
-  padding: 2rem;
-  font-size: 1.8rem;
+  max-width: 85%;
+  padding: 2.4rem;
+  font-size: 1.6rem;
   color: #ffffff;
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
+  white-space: pre-wrap;
 }
 
 .prompt {
@@ -133,6 +139,7 @@
   border-radius: 0 3rem 3rem 3rem;
   align-self: flex-start;
   text-align: left;
+  padding-left: 4rem;
 }
 
 .prompt span,
@@ -141,6 +148,45 @@
   font-size: 1.4rem;
   display: block;
   margin-top: 0.5rem;
+  padding-bottom: 2rem;
+}
+
+.chat-window,
+.chat,
+.prompt,
+.response {
+  min-width: 0;
+}
+
+.prompt *,
+.response * {
+  max-width: 100%;
+}
+
+.prompt pre,
+.response pre {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.prompt code,
+.response code,
+.prompt p,
+.response p,
+.prompt li,
+.response li {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.chat-window {
+  width: 100%;
+}
+
+.msg-input {
+  width: 100%;
 }
 
 .typing {
@@ -218,10 +264,6 @@
     transform: translateX(0);
   }
 
-  .chat-window {
-    width: 100%;
-  }
-
   .chat-title h3 {
     padding-left: 5rem;
   }
@@ -242,5 +284,13 @@
 
   .picker {
     left: 1rem;
+  }
+
+  .chat-window {
+    width: 100%;
+  }
+
+  .msg-input {
+    width: 100%;
   }
 }

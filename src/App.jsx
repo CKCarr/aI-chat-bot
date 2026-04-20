@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ChatBotStart from './Components/ChatBotStart'
 import ChatBotApp from './Components/ChatBotApp'
 import { v4 as uuidv4 } from 'uuid'
@@ -8,6 +8,14 @@ const App = () => {
   // stores list of chat sessions
   const [chats, setChats] = useState([])
   const [activeChat, setActiveChat] = useState(null)
+
+  useEffect(() => {
+    const storedChats = JSON.parse(localStorage.getItem("chats")) || [];
+    setChats(storedChats);
+    if (storedChats.length > 0) {
+      setActiveChat(storedChats[0].id);
+    }
+  }, []) // useEffect for loading chat history from localStorage when the app mounts
 
   // handler sets state of isChatting to true when user clicks start button on landing page
   const handleStartChat = () => {
@@ -39,6 +47,8 @@ const App = () => {
     }
     const updatedChats = [newChat, ...chats]
     setChats(updatedChats)
+    localStorage.setItem("chats", JSON.stringify(updatedChats))
+    localStorage.setItem(newChat.id, JSON.stringify(newChat.messages))
     setActiveChat(newChat.id)
   }
 
