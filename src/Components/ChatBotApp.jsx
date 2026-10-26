@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useEffect, useState, use } from "react";
+import React, { useRef, useEffect, useState, use } from "react";
 import ReactMarkdown from 'react-markdown';
 import EmojiPicker from 'emoji-picker-react';
 import "./ChatBotApp.css";
@@ -80,7 +80,7 @@ const ChatBotApp = ({
             setIsTyping(true);
 
             // await must be async function to handle response from API call
-            const response = await fetch("http://localhost:3001/api/chat", {
+            const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
